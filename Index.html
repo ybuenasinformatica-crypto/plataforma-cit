@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Plataforma de Gestión CIT</title>
+
+  <link rel="stylesheet" href="estilos.css">
+</head>
+
+<body>
+  <div class="app">
+
+    <aside class="sidebar">
+      <div class="marca">
+        <div class="marca-logo">CIT</div>
+
+        <div>
+          <h1>Gestión CIT</h1>
+          <p>Centro de Innovación Tecnológica</p>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <button
+          class="menu-item activo"
+          data-seccion="inicio"
+        >
+          <span>🏠</span>
+          Inicio
+        </button>
+
+        <button
+          class="menu-item"
+          data-seccion="inventario"
+        >
+          <span>📦</span>
+          Inventario
+        </button>
+
+        <button
+          class="menu-item"
+          data-seccion="nuevo-equipo"
+        >
+          <span>➕</span>
+          Nuevo equipo
+        </button>
+
+        <button
+          class="menu-item"
+          data-seccion="buscar-equipo"
+        >
+          <span>🔎</span>
+          Buscar equipo
+        </button>
+
+        <button
+          class="menu-item"
+          disabled
+        >
+          <span>📷</span>
+          Escáner QR
+        </button>
+      </nav>
+
+      <div class="sidebar-pie">
+        Plataforma CIT
+        <br>
+        Liceo Bicentenario Agrícola
+      </div>
+    </aside>
+
+    <main class="contenido">
+
+      <header class="barra-superior">
+        <button
+          id="botonMenu"
+          class="boton-menu"
+          aria-label="Abrir menú"
+        >
+          ☰
+        </button>
+
+        <div>
+          <h2 id="tituloPagina">Panel principal</h2>
+          <p id="subtituloPagina">
+            Plataforma de Gestión del Centro de Innovación Tecnológica
+          </p>
+        </div>
+
+        <div class="estado-api">
+          <span id="indicadorApi"></span>
+          <span id="textoApi">Conectando...</span>
+        </div>
+      </header>
+
+      <div
+        id="mensajeGlobal"
+        class="mensaje-global oculto"
+      ></div>
+
+      <section
+        id="inicio"
+        class="seccion activa"
+      >
+        <div class="bienvenida">
+          <div>
+            <span class="etiqueta">PLATAFORMA CIT</span>
+
+            <h3>
+              Gestión tecnológica centralizada
+            </h3>
+
+            <p>
+              Administra los equipos, códigos QR y registros del
+              Centro de Innovación Tecnológica desde una sola plataforma.
+            </p>
+          </div>
+
+          <div class="bienvenida-icono">
+            ⚙️
+          </div>
+        </div>
+
+        <div class="tarjetas">
+          <article class="tarjeta">
+            <div class="tarjeta-icono azul">
+              📦
+            </div>
+
+            <div>
+              <strong id="totalEquipos">0</strong>
+              <span>Equipos registrados</span>
+            </div>
+          </article>
+
+          <article class="tarjeta">
+            <div class="tarjeta-icono verde">
+              ✅
+            </div>
+
+            <div>
+              <strong id="equiposDisponibles">0</strong>
+              <span>Equipos disponibles</span>
+            </div>
+          </article>
+
+          <article class="tarjeta">
+            <div class="tarjeta-icono naranja">
+              🔧
+            </div>
+
+            <div>
+              <strong id="equiposMantencion">0</strong>
+              <span>En mantención</span>
+            </div>
+          </article>
+
+          <article class="tarjeta">
+            <div class="tarjeta-icono dorado">
+              🏷️
+            </div>
+
+            <div>
+              <strong id="equiposPrestados">0</strong>
+              <span>Equipos prestados</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="panel">
+          <div class="panel-encabezado">
+            <div>
+              <h3>Inventario reciente</h3>
+              <p>Últimos equipos registrados en la plataforma</p>
+            </div>
+
+            <button
+              class="boton secundario"
+              data-ir="inventario"
+            >
+              Ver inventario
+            </button>
+          </div>
+
+          <div id="inventarioReciente">
+            <div class="cargando">
+              Cargando información...
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="inventario"
+        class="seccion"
+      >
+        <div class="cabecera-seccion">
+          <div>
+            <h3>Inventario CIT</h3>
+            <p>
+              Consulta los equipos registrados en Google Sheets.
+            </p>
+          </div>
+
+          <button
+            class="boton principal"
+            data-ir="nuevo-equipo"
+          >
+            + Nuevo equipo
+          </button>
+        </div>
+
+        <div class="panel">
+          <div class="buscador">
+            <input
+              id="filtroInventario"
+              type="search"
+              placeholder="Buscar por nombre, código, marca o modelo"
+            >
+          </div>
+
+          <div
+            id="listaInventario"
+            class="lista-inventario"
+          >
+            <div class="cargando">
+              Cargando inventario...
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="nuevo-equipo"
+        class="seccion"
+      >
+        <div class="cabecera-seccion">
+          <div>
+            <h3>Registrar nuevo equipo</h3>
+            <p>
+              El código QR se generará automáticamente.
+            </p>
+          </div>
+        </div>
+
+        <form
+          id="formularioEquipo"
+          class="panel formulario"
+        >
+          <div class="campo campo-completo">
+            <label for="nombre">
+              Nombre del equipo *
+            </label>
+
+            <input
+              id="nombre"
+              name="nombre"
+              type="text"
+              required
+              placeholder="Ejemplo: Impresora 3D Ender 3"
+            >
+          </div>
+
+          <div class="campo">
+            <label for="categoria">
+              Categoría
+            </label>
+
+            <select
+              id="categoria"
+              name="categoria"
+            >
+              <option value="">Seleccionar</option>
+              <option>Computador</option>
+              <option>Impresora 3D</option>
+              <option>Robótica</option>
+              <option>Arduino y electrónica</option>
+              <option>Herramienta</option>
+              <option>Pantalla o proyector</option>
+              <option>Sensor</option>
+              <option>Otro</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="marca">
+              Marca
+            </label>
+
+            <input
+              id="marca"
+              name="marca"
+              type="text"
+            >
+          </div>
+
+          <div class="campo">
+            <label for="modelo">
+              Modelo
+            </label>
+
+            <input
+              id="modelo"
+              name="modelo"
+              type="text"
+            >
+          </div>
+
+          <div class="campo">
+            <label for="serie">
+              Número de serie
+            </label>
+
+            <input
+              id="serie"
+              name="serie"
+              type="text"
+            >
+          </div>
+
+          <div class="campo">
+            <label for="ubicacion">
+              Ubicación
+            </label>
+
+            <input
+              id="ubicacion"
+              name="ubicacion"
+              type="text"
+              placeholder="Ejemplo: Zona de impresión 3D"
+            >
+          </div>
+
+          <div class="campo">
+            <label for="estado">
+              Estado
+            </label>
+
+            <select
+              id="estado"
+              name="estado"
+            >
+              <option value="Disponible">Disponible</option>
+              <option value="En uso">En uso</option>
+              <option value="Prestado">Prestado</option>
+              <option value="En mantención">En mantención</option>
+              <option value="Dañado">Dañado</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="responsable">
+              Responsable
+            </label>
+
+            <input
+              id="responsable"
+              name="responsable"
+              type="text"
+            >
+          </div>
+
+          <div class="campo">
+            <label for="fechaAdquisicion">
+              Fecha de adquisición
+            </label>
+
+            <input
+              id="fechaAdquisicion"
+              name="fechaAdquisicion"
+              type="date"
+            >
+          </div>
+
+          <div class="campo campo-completo">
+            <label for="observaciones">
+              Observaciones
+            </label>
+
+            <textarea
+              id="observaciones"
+              name="observaciones"
+              rows="4"
+            ></textarea>
+          </div>
+
+          <div class="acciones-formulario campo-completo">
+            <button
+              type="reset"
+              class="boton secundario"
+            >
+              Limpiar
+            </button>
+
+            <button
+              id="botonGuardar"
+              type="submit"
+              class="boton principal"
+            >
+              Guardar equipo
+            </button>
+          </div>
+        </form>
+
+        <div
+          id="resultadoRegistro"
+          class="panel resultado oculto"
+        ></div>
+      </section>
+
+      <section
+        id="buscar-equipo"
+        class="seccion"
+      >
+        <div class="cabecera-seccion">
+          <div>
+            <h3>Buscar equipo</h3>
+            <p>
+              Ingresa manualmente el código contenido en el QR.
+            </p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <form
+            id="formularioBusqueda"
+            class="busqueda-codigo"
+          >
+            <input
+              id="codigoBusqueda"
+              type="text"
+              placeholder="Ejemplo: CIT-EQP-0001"
+              required
+            >
+
+            <button
+              type="submit"
+              class="boton principal"
+            >
+              Buscar
+            </button>
+          </form>
+
+          <div id="resultadoBusqueda"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div
+    id="overlay"
+    class="overlay"
+  ></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
